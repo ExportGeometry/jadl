@@ -20,6 +20,13 @@ It may work for other versions, but use at your own discretion.
 
 
 
+## Demo Videos
+
+* [JADL with multiparm support](https://www.youtube.com/watch?v=0B7kYdJUYlY) (no sound)
+* [Basic Topnet](https://www.youtube.com/watch?v=SSujIKtIvxA) (no sound)
+
+
+
 ## Installation
 
 1) If you don't already have one, create a root directory for your houdini tools (anywhere on your machine).
