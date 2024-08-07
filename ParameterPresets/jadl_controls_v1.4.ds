@@ -1,0 +1,140 @@
+{
+    name	selectedparms
+
+    groupsimple {
+        name    "folder1"
+        label   "Asset Definitions"
+
+        parm {
+            name    "asset_defs_enabled"
+            label   "Use Asset Definitions File"
+            type    toggle
+            joinnext
+            default { "1" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "create_missing_file"
+            label   "Create File if Missing"
+            type    toggle
+            default { "0" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "json_file_path"
+            label   "Path to JSON file"
+            type    file
+            joinnext
+            default { "" }
+            disablewhen "{ asset_defs_enabled == 0 }"
+            parmtag { "script_callback" "__import__('jadl').force_reload(kwargs['node'], reset_parms=False)" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "force_reload"
+            label   "Reload File"
+            type    button
+            default { "0" }
+            disablewhen "{ asset_defs_enabled == 0 } { pdg_enabled == 1 }"
+            parmtag { "script_callback" "__import__('jadl').force_reload(kwargs['node'])" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "asset_def_name"
+            label   "Asset Definition Name"
+            type    string
+            joinnext
+            default { "" }
+            disablewhen "{ asset_defs_enabled == 0 } { pdg_enabled == 1 }"
+            parmtag { "script_callback" "__import__('jadl').parm_changed(kwargs['node'], kwargs['parm'])" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "asset_def_menu"
+            label   "Asset Definition Menu"
+            type    ordinal
+            nolabel
+            default { "0" }
+            disablewhen "{ asset_defs_enabled == 0 } { pdg_enabled == 1 }"
+            menumini {
+                [ "import jadl" ]
+                [ "" ]
+                [ "node = kwargs['node']" ]
+                [ "" ]
+                [ "menu_options = ()" ]
+                [ "" ]
+                [ "if (node.type().name() == 'hdaprocessor' or not jadl.is_manual_mode(node)):" ]
+                [ "    return menu_options" ]
+                [ "  " ]
+                [ "json_data = jadl.get_cached_json_data(node)" ]
+                [ "asset_defs = []" ]
+                [ "" ]
+                [ "if (json_data and jadl.JK_ALL_DEFS in json_data):" ]
+                [ "  asset_defs = json_data[jadl.JK_ALL_DEFS]" ]
+                [ "" ]
+                [ "for index, asset in enumerate(asset_defs):" ]
+                [ "    menu_options += (index, asset[jadl.JK_ASSET_NAME])" ]
+                [ "    " ]
+                [ "menu_options += (len(menu_options), 'New')" ]
+                [ "        " ]
+                [ "return menu_options" ]
+                language python
+            }
+            parmtag { "script_callback" "__import__('jadl').asset_def_menu_callback(kwargs['node'])" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "revert_asset_def"
+            label   "Revert Asset"
+            type    button
+            joinnext
+            default { "0" }
+            disablewhen "{ asset_defs_enabled == 0 } { pdg_enabled == 1 } { changed_parms <= 0 }"
+            parmtag { "script_callback" "__import__('jadl').asset_def_menu_callback(kwargs['node'])" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "save_asset_def"
+            label   "Save Asset"
+            type    button
+            joinnext
+            default { "0" }
+            disablewhen "{ asset_defs_enabled == 0 } { changed_parms == 0 } { asset_def_name == \"\" }"
+            parmtag { "script_callback" "__import__('jadl').update_asset_def(kwargs['node'])" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "delete_asset_def"
+            label   "Delete Asset"
+            type    button
+            default { "0" }
+            disablewhen "{ asset_defs_enabled == 0 } { changed_parms < 0 } { asset_def_name == \"\" }"
+            parmtag { "script_callback" "__import__('jadl').update_asset_def(kwargs['node'], True)" }
+            parmtag { "script_callback_language" "python" }
+        }
+    }
+
+    groupsimple {
+        name    "folder3"
+        label   "Dev"
+
+        parm {
+            name    "enable_logging"
+            label   "Enable Logging"
+            type    toggle
+            default { "0" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "changed_parms"
+            label   "Changed Parms"
+            type    integer
+            default { "-1" }
+            disablewhen "{ isparm(changed_parms) == 1 }"
+            range   { 0 10 }
+            parmtag { "script_callback_language" "python" }
+        }
+    }
+
+
+}

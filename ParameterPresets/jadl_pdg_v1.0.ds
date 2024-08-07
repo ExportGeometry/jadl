@@ -1,0 +1,27 @@
+{
+    name	selectedparms
+
+    groupsimple {
+        name    "folder2"
+        label   "PDG Controls"
+
+        parm {
+            name    "pdg_enabled"
+            label   "Enabled"
+            type    toggle
+            default { "0" }
+            parmtag { "script_callback_language" "python" }
+        }
+        parm {
+            name    "asset_index"
+            label   "Asset Index"
+            type    integer
+            default { "0" }
+            disablewhen "{ pdg_enabled == 0 }"
+            range   { 0 10 }
+            parmtag { "script_callback_language" "python" }
+        }
+    }
+
+
+}
